@@ -1,0 +1,58 @@
+Steg 5 - Skapa en textfil med svar på frågor
+
+●Vad är pull repektive push?
+git push: Används för att skicka upp sparade ändringar (commits) från din lokala dator till ett remote repository (till exempel GitHub). Det gör att andra kan se koden eller att en molnversion blir uppdaterad.
+
+git pull: Används för att göra tvärtom. Den hämtar hem och slår ihop (merge) de senaste ändringarna från GitHub till min lokala dator. Detta är viktigt för att hålla kod synkad, särskilt om man jobbar i grupp.
+
+●När använder man log respektive status?
+git status: Används hela tiden för att se nuläget. Den visar vilka filer någon har ändrat, vilka som är tillagda (staged) och vilken branch (HEAD) någon befinner sig på just nu.
+
+git log: Används när någon vill titta bakåt i historiken. Den visar en lista över alla tidigare commits, vem som har gjort dem, datum och commit-meddelanden. Perfekt när man letar efter när en viss bugg dök upp.
+
+●Vad är en Git branch och varför är de viktiga?
+En branch (gren) är som en separat, parallell version av ditt projekt. När du skapar en ny branch utgår den från din kod (ofta från main), men allt du gör där påverkar inte originalkoden förrän du bestämmer dig för att slå ihop det (merge). 
+De är livsviktiga för att man ska kunna experimentera, testa nya funktioner eller bygga ut spelet utan att riskera att pajja den fungerande koden i main. Det gör det också möjligt för flera utvecklare att jobba på samma projekt samtidigt utan att krocka med varandra.
+
+
+●Det finns flera sätt att rulla tillbaka koden till ett tidigare tillstånd. Förklara skillnaden och
+motivera när man skulle använda den ena eller andra metoden. Ge exempel på de
+kommandon du använder för att göra detta och vissa att det fungerar, vilken
+output du fick från git-kommandona.
+Tips: Gör exemplen med att backa i en branch så att master fortfarande är
+korrekt.
+Spara filen, lägg till den i repot, committa, pusha.
+
+Det finns olika sätt att backa tillbaka i tiden i Git beroende på hur drastisk man behöver vara:
+git reset --hard <commit-hash>
+När man använder den: När man vill kasta bort alla ändringar man gjort efter en viss commit och nollställa projektet helt till det tillståndet. (Varning: Man tappar allt som gjorts därefter lokalt).
+git revert <commit-hash>
+När man använder den: När koden redan är skickad till GitHub och man vill "ångra" en specifik commit utan att förstöra historiken. Den skapar en ny commit som gör tvärtom mot den gamla.
+Exempel på hur man gör (på en separat test-branch):
+Vi skapar en testbranch för att inte störa main, gör en ändring, kollar loggen och backar sedan tillbaka.
+
+Kommandon och output i terminalen:
+# 1. Skapa och byt till en testbranch
+$ git checkout -b test-branch
+Switched to a new branch 'test-branch'
+
+# 2. Vi lägger till en rad i en fil och gör en commit
+$ git add .
+$ git commit -m "Lägg till en rad som vi vill ångra"
+[test-branch a1b2c3d] Lägg till en rad som vi vill ångra
+ 1 file changed, 1 insertion(+)
+
+# 3. Vi kollar historiken med git log för att hitta commit-ID (hash)
+$ git log --oneline
+a1b2c3d Lägg till en rad som vi vill ångra
+f4e3d2c Ursprunglig kod som fungerar
+
+# 4. Vi vill rulla tillbaka till den fungerande commiten med reset --hard
+$ git reset --hard f4e3d2c
+HEAD is now at f4e3d2c Ursprunglig kod som fungerar
+
+# 5. Vi kontrollerar att allt är rent och tillbaka på rätt ställe med git status
+$ git status
+On branch test-branch
+nothing to commit, working tree clean
+
